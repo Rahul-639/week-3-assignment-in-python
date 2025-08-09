@@ -1,0 +1,51 @@
+# Definition for singly-linked list node
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+def detectLoop(head):
+    slow = head
+    fast = head
+    
+    while fast and fast.next:
+        slow = slow.next          # Move slow by 1 step
+        fast = fast.next.next     # Move fast by 2 steps
+        
+        if slow == fast:          # Loop detected
+            return True
+    return False
+
+# Helper to create linked list from list of values
+def createLinkedList(values, pos):
+    if not values:
+        return None
+    head = Node(values[0])
+    current = head
+    nodes = [head]  # Store references for connecting loop
+    
+    for val in values[1:]:
+        new_node = Node(val)
+        current.next = new_node
+        current = new_node
+        nodes.append(new_node)
+    
+    # Create loop if pos > 0
+    if pos > 0:
+        current.next = nodes[pos - 1]  # 1-based index
+    
+    return head
+
+# Example usage
+if __name__ == "__main__":
+    # Example 1: Loop exists (pos = 2)
+    head1 = createLinkedList([1, 3, 4], 2)
+    print(detectLoop(head1))  # true
+
+    # Example 2: No loop (pos = 0)
+    head2 = createLinkedList([1, 8, 3, 4], 0)
+    print(detectLoop(head2))  # false
+
+    # Example 3: Loop exists (pos = 1)
+    head3 = createLinkedList([1, 2, 3, 4], 1)
+    print(detectLoop(head3))  # true
