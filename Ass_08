@@ -1,0 +1,50 @@
+# Definition for singly-linked list node
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+def reverseList(head):
+    prev = None
+    current = head
+    
+    while current:
+        next_node = current.next  # Store next node
+        current.next = prev       # Reverse the link
+        prev = current            # Move prev forward
+        current = next_node       # Move current forward
+    
+    return prev  # New head
+
+# Helper to create linked list from list of values
+def createLinkedList(values):
+    if not values:
+        return None
+    head = Node(values[0])
+    current = head
+    for val in values[1:]:
+        current.next = Node(val)
+        current = current.next
+    return head
+
+# Helper to print linked list
+def printList(head):
+    temp = head
+    while temp:
+        print(temp.data, end=" ")
+        temp = temp.next
+    print()
+
+# Example usage
+if __name__ == "__main__":
+    head1 = createLinkedList([1, 2, 3, 4])
+    head1 = reverseList(head1)
+    printList(head1)  # 4 3 2 1
+
+    head2 = createLinkedList([2, 7, 10, 9, 8])
+    head2 = reverseList(head2)
+    printList(head2)  # 8 9 10 7 2
+
+    head3 = createLinkedList([2])
+    head3 = reverseList(head3)
+    printList(head3)  # 2
