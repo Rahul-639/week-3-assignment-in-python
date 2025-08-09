@@ -1,0 +1,85 @@
+# Definition for singly-linked list node
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+def reverseList(head):
+    prev = None
+    current = head
+    while current:
+        next_node = current.next
+        current.next = prev
+        prev = current
+        current = next_node
+    return prev
+
+def removeLeadingZeros(head):
+    while head and head.data == 0:
+        head = head.next
+    return head if head else Node(0)
+
+def addTwoLists(head1, head2):
+    # Remove leading zeros
+    head1 = removeLeadingZeros(head1)
+    head2 = removeLeadingZeros(head2)
+    
+    # Reverse both lists to make addition easier
+    head1 = reverseList(head1)
+    head2 = reverseList(head2)
+    
+    carry = 0
+    dummy = Node(0)
+    current = dummy
+    
+    while head1 or head2 or carry:
+        val1 = head1.data if head1 else 0
+        val2 = head2.data if head2 else 0
+        
+        total = val1 + val2 + carry
+        carry = total // 10
+        current.next = Node(total % 10)
+        current = current.next
+        
+        if head1:
+            head1 = head1.next
+        if head2:
+            head2 = head2.next
+    
+    # Reverse result back to forward order
+    result = reverseList(dummy.next)
+    
+    return result
+
+# Helper to create linked list from list of digits
+def createLinkedList(values):
+    if not values:
+        return None
+    head = Node(values[0])
+    current = head
+    for val in values[1:]:
+        current.next = Node(val)
+        current = current.next
+    return head
+
+# Helper to print linked list
+def printList(head):
+    temp = head
+    while temp:
+        print(temp.data, end=" ")
+        temp = temp.next
+    print()
+
+# Example usage
+if __name__ == "__main__":
+    # Example 1
+    head1 = createLinkedList([4, 5])
+    head2 = createLinkedList([3, 4, 5])
+    result = addTwoLists(head1, head2)
+    printList(result)  # Output: 3 9 0
+    
+    # Example 2
+    head1 = createLinkedList([0, 0, 6, 3])
+    head2 = createLinkedList([0, 7])
+    result = addTwoLists(head1, head2)
+    printList(result)  # Output: 7 0
