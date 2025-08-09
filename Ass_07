@@ -1,0 +1,72 @@
+# Definition for singly-linked list node
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+def removeLoop(head):
+    if head is None or head.next is None:
+        return False  # No loop possible
+
+    slow = head
+    fast = head
+
+    # Step 1: Detect loop using Floyd's algorithm
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+
+        if slow == fast:  # Loop detected
+            break
+    else:
+        return True  # No loop found, return true (per problem statement)
+
+    # Step 2: Find the start of the loop
+    slow = head
+    while slow != fast:
+        slow = slow.next
+        fast = fast.next
+
+    # 'slow' (or 'fast') is now at the starting node of the loop
+    loop_start = slow
+
+    # Step 3: Find the last node in the loop and unlink it
+    ptr = loop_start
+    while ptr.next != loop_start:
+        ptr = ptr.next
+    ptr.next = None  # Break the loop
+
+    return True  # Loop removed successfully
+
+# Helper to create linked list with optional loop
+def createLinkedList(values, pos):
+    if not values:
+        return None
+    head = Node(values[0])
+    current = head
+    nodes = [head]
+    
+    for val in values[1:]:
+        new_node = Node(val)
+        current.next = new_node
+        current = new_node
+        nodes.append(new_node)
+    
+    if pos > 0:
+        current.next = nodes[pos - 1]  # Create loop
+    
+    return head
+
+# Example usage
+if __name__ == "__main__":
+    # Example 1: Loop at pos = 2
+    head1 = createLinkedList([1, 3, 4], 2)
+    print(removeLoop(head1))  # true
+
+    # Example 2: No loop
+    head2 = createLinkedList([1, 8, 3, 4], 0)
+    print(removeLoop(head2))  # true
+
+    # Example 3: Loop at pos = 1
+    head3 = createLinkedList([1, 2, 3, 4], 1)
+    print(removeLoop(head3))  # true
